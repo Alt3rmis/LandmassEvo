@@ -17,11 +17,12 @@ public static class Agent
             }
         }
 
-        
-        MountainAgent ma = new MountainAgent(3, 0.3f, 1.0f, 500, 20, 30, rand, noiseMap);
+
+        // MountainAgent ma = new MountainAgent(3, 0.3f, 1.0f, 500, 20, 30, rand, noiseMap);
         // SmoothAgent sa = new SmoothAgent(1000, 50, rand, noiseMap);
-        
+        MAgent ma = new MAgent(5, 0.3f, 1.0f, 500, 5, 10, rand, noiseMap, 0.8f, 4);
         ma.run();
+        // ma.run();
         // sa.run();
 
 
