@@ -4,94 +4,85 @@ using UnityEngine;
 
 public class SmoothAgent
 {
+    private float[,] heightMap;
     private int token;
-    private int backInterval;
-    System.Random rand;
+    private System.Random rand;
+
+    private int[] position;
     private int mapWidth;
     private int mapHeight;
-    private float[,] heightMap;
-
-    private int[] currentLocation;
-    private int[] startLocation;
-
-    public SmoothAgent(int token, int jumpInterval, System.Random rand, float[,] heightMap)
+    public SmoothAgent(float[,] heightMap, int token, System.Random rand)
     {
+        this.heightMap = heightMap;
         this.token = token;
-        this.backInterval = jumpInterval;
+        
         this.rand = rand;
-        this.currentLocation = new int[2];
-        this.startLocation = new int[2];
+        this.position = new int[2];
         this.mapWidth = heightMap.GetLength(0);
         this.mapHeight = heightMap.GetLength(1);
-        this.heightMap = heightMap;
     }
 
     public void run()
     {
-        // get random start point
-        currentLocation[0] = rand.Next(0, mapWidth);
-        currentLocation[1] = rand.Next(0, mapHeight);
-        // foreach token
-        while(token > 0)
+        // generate random position
+        position[0] = rand.Next(0, mapWidth);
+        position[1] = rand.Next(0, mapHeight);
+
+        while(token > 0) // this agent alive
         {
             smooth();
-            getNeighbour();
-            if(token % backInterval == 0)
-            {
-                randomJump();
-            }
+            move();
             token--;
         }
     }
 
-    private bool isInMap(int[] pos)
-    {
-        return pos[0] >= 0 && pos[0] < mapWidth && pos[1] >= 0 && pos[1] < mapHeight;
-    }
-
     private void smooth()
     {
-        float sum = 0.0f;
-        Debug.Log("Current Location:" + currentLocation[0] + "," + currentLocation[1]);
-        sum += 3 * heightMap[currentLocation[0], currentLocation[1]];
-        int counter = 3; // weight
-        for(int i = -1; i < 2; i++)
+        // do the smooth
+        float value = 0;
+        int count = 0;
+        int[] temp_pos = new int[2];
+        for (int i = -1; i < 2; i++)
         {
             for(int j = -1; j < 2; j++)
             {
-                int[] tempLoc = new int[2];
-                tempLoc[0] = currentLocation[0] + i;
-                tempLoc[1] = currentLocation[1] + j;
-                if (isInMap(tempLoc) && i != 0 && j != 0)
+                temp_pos[0] = position[0] + i;
+                temp_pos[1] = position[1] + j;
+                if (isInBound(temp_pos)) // in the height map boundary
                 {
-                    sum += heightMap[tempLoc[0], tempLoc[1]];
-                    counter++;
+                    value += heightMap[temp_pos[0], temp_pos[1]];
+                    count += 1;
                 }
             }
         }
-        heightMap[currentLocation[0], currentLocation[1]] = sum / counter;
-    }
-    private void getNeighbour()
-    {
-        int horizontalChoice = rand.Next(0, 3) - 1;
-        int verticalChoice = rand.Next(0, 3) - 1;
-        int[] tempLoc = new int[2];
-        tempLoc[0] = currentLocation[0] + horizontalChoice;
-        tempLoc[1] = currentLocation[1] + verticalChoice;
-        while(horizontalChoice == 0 && verticalChoice == 0 && !isInMap(tempLoc))
-        {
-            horizontalChoice = rand.Next(0, 3) - 1;
-            verticalChoice = rand.Next(0, 3) - 1;
-            tempLoc[0] = currentLocation[0] + horizontalChoice;
-            tempLoc[1] = currentLocation[1] + verticalChoice;
-        }
-        currentLocation[0] = tempLoc[0];
-        currentLocation[1] = tempLoc[1];
+        heightMap[position[0], position[1]] = value / count;
     }
 
-    private void randomJump()
+    private void move()
     {
-        currentLocation[0] = rand.Next(0, mapWidth);
-        currentLocation[1] = rand.Next(0, mapHeight);
+        // move to the next random location
+        int[] temp_pos = new int[2];
+        ArrayList ints = new ArrayList();
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if(i == 0 && j == 0)
+                {
+                    continue;
+                }
+                temp_pos[0] = position[0] + i;
+                temp_pos[1] = position[1] + j;
+                if (isInBound(temp_pos)) // in the height map boundary
+                {
+                    ints.Add(temp_pos);
+                }
+            }
+        }
+    }
+
+    private bool isInBound(int[] pos)
+    {
+        return pos[0] >= 0 && pos[0] < mapWidth && pos[1] >= 0 && pos[1] < mapHeight;
     }
 }

@@ -22,7 +22,9 @@ public static class Agent
         // SmoothAgent sa = new SmoothAgent(1000, 50, rand, noiseMap);
         // MAgent ma = new MAgent(5, 0.3f, 1.0f, 100, 5, 10, rand, noiseMap, 0.8f, 20);
         InitAgent ia = new InitAgent(noiseMap, rand);
+        SmoothAgent sa = new SmoothAgent(10000, 50, rand, noiseMap);
         ia.run();
+        sa.run();
         // ma.run();
         // ma.run();
         // sa.run();
