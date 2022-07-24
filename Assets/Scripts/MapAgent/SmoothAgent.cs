@@ -62,6 +62,8 @@ public class SmoothAgent
     {
         // move to the next random location
         int[] temp_pos = new int[2];
+        temp_pos[0] = position[0];
+        temp_pos[1] = position[1];
         int choice = rand.Next(0, 2);
         if (choice == 0) // horizontal
         {
@@ -89,6 +91,8 @@ public class SmoothAgent
         }
         while (!isInBound(temp_pos))
         {
+            temp_pos[0] = position[0];
+            temp_pos[1] = position[1];
             choice = rand.Next(0, 2);
             if (choice == 0) // horizontal
             {
