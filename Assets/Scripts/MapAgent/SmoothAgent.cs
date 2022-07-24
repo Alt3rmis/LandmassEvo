@@ -62,23 +62,61 @@ public class SmoothAgent
     {
         // move to the next random location
         int[] temp_pos = new int[2];
-        ArrayList ints = new ArrayList();
-        for (int i = -1; i < 2; i++)
+        int choice = rand.Next(0, 2);
+        if (choice == 0) // horizontal
         {
-            for (int j = -1; j < 2; j++)
+            choice = rand.Next(0, 2);
+            if (choice == 0)
             {
-                if(i == 0 && j == 0)
+                temp_pos[1] += 1;
+            }
+            else
+            {
+                temp_pos[1] -= 1;
+            }
+        }
+        else
+        {
+            choice = rand.Next(0, 2);
+            if (choice == 0)
+            {
+                temp_pos[0] += 1;
+            }
+            else
+            {
+                temp_pos[0] -= 1;
+            }
+        }
+        while (!isInBound(temp_pos))
+        {
+            choice = rand.Next(0, 2);
+            if (choice == 0) // horizontal
+            {
+                choice = rand.Next(0, 2);
+                if (choice == 0)
                 {
-                    continue;
+                    temp_pos[1] += 1;
                 }
-                temp_pos[0] = position[0] + i;
-                temp_pos[1] = position[1] + j;
-                if (isInBound(temp_pos)) // in the height map boundary
+                else
                 {
-                    ints.Add(temp_pos);
+                    temp_pos[1] -= 1;
+                }
+            }
+            else
+            {
+                choice = rand.Next(0, 2);
+                if (choice == 0)
+                {
+                    temp_pos[0] += 1;
+                }
+                else
+                {
+                    temp_pos[0] -= 1;
                 }
             }
         }
+        position[0] = temp_pos[0];
+        position[1] = temp_pos[1];
     }
 
     private bool isInBound(int[] pos)
