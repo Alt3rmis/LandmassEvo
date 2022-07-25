@@ -13,7 +13,7 @@ public static class Agent
         {
             for(int j = 0; j < noiseMap.GetLength(1); j++)
             {
-                noiseMap[i, j] = 0.3f;
+                noiseMap[i, j] = 0.0f;
             }
         }
 
@@ -23,9 +23,9 @@ public static class Agent
         // MAgent ma = new MAgent(5, 0.3f, 1.0f, 100, 5, 10, rand, noiseMap, 0.8f, 20);
         InitAgent ia = new InitAgent(noiseMap, rand);
         ia.run();
-        for (int i = 0; i < 50; ++i)
+        for (int i = 0; i < 500; ++i)
         {
-            SmoothAgent sa = new SmoothAgent(noiseMap, 1000, rand);
+            SmoothAgent sa = new SmoothAgent(noiseMap, 50, rand);
             sa.run();
         }
 
